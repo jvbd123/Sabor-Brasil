@@ -1,0 +1,327 @@
+/* Estilização da área de comentários */
+.comentario-container {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9; /* Fundo claro para o campo de comentários */
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.comentario-container input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #D97014;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.comentario-container button {
+    background-color: #D97014;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.comentario-container button:hover {
+    background-color: #c16312;
+}
+
+/* Estilização dos itens de comentário */
+.comentario-item {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comentario-item p {
+    flex-grow: 1;
+    font-size: 14px;
+    margin: 0;
+}
+
+.editar-comentario,
+.excluir-comentario {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.editar-comentario:hover,
+.excluir-comentario:hover {
+    opacity: 0.7;
+}
+
+/* Ícones de curtir e descurtir */
+.interacoes img {
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.interacoes img:hover {
+    opacity: 0.8;
+}
+
+/* Botões de curtir e descurtir quando ativados */
+.interacoes img.active {
+    filter: invert(39%) sepia(81%) saturate(1678%) hue-rotate(359deg) brightness(95%) contrast(93%);
+}
+
+/* Ajustando a parte de exibição de comentários */
+.num-comentarios {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #888;
+}
+
+/* Estilos gerais */
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+html {
+    height: 100%;
+    margin: 0;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 25% 55% 15%;
+    grid-gap: 10px;
+    padding: 10px;
+    min-height: 100vh;
+}
+
+.perfil, .principal, .login {
+    padding: 20px;
+}
+
+.principal {
+    border: 2px solid #D97014;
+    flex-grow: 1;  
+}
+
+
+
+.modal-login {
+    display: none; /* Torna o modal invisível por padrão */
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    z-index: 1000; /* Garante que o modal fique sobre outros elementos */
+    padding: 20px; /* Espaçamento de segurança */
+    box-sizing: border-box;
+}
+
+.modal-conteudo {
+    background-color: white;
+    padding: 60px;
+    border: 4px solid #D97014;
+    width: 330px;
+    box-sizing: border-box; /* Garante que o padding seja considerado no tamanho total */
+    margin: auto;
+}
+
+.modal-conteudo h2 {
+    margin-top: 0;
+}
+
+.modal-conteudo input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+}
+
+.modal-conteudo button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.modal-conteudo button:hover {
+    background-color: #c16312; /* Efeito hover para o botão */
+}
+
+
+#btn-entra{
+	background-color: #D97014;
+	color: white;
+	width: 5px;
+	height: 40px;
+}
+
+#btn-cancelar {
+	background-color: transparent;
+	border: 1px solid #D97014;
+	color: #D97014;
+	width: 95px;
+	height: 40px;
+}
+
+#btn-entrar {
+	background-color: #D97014;
+	color: white;
+	width: 95px;
+	height: 40px;
+}
+
+footer {
+    display: flex;
+    justify-content: space-around;
+    background-color: #D97014;
+    padding: 10px 0;
+}
+
+.social{
+    display: flex;
+    gap: 30px;
+}
+
+footer p {
+    color: white;
+}
+#btn-login{
+	background-color: #D97014;
+	color: white;
+	border: none;
+	width: auto;
+	height: 25px;
+	cursor: pointer;
+	border-radius: 10%;
+}
+
+#btn-ir-cadastro{
+	background-color: #D97014;
+	color: white;
+	border: none;
+	width: 95px;
+	height: 25px;
+	cursor: pointer;
+
+
+}
+#btn-alterar-perfil{
+    background-color: #D97014;
+	color: white;
+	border: none;
+	width: 95px;
+	height: 25px;
+	cursor: pointer;
+
+}
+img{
+	margin: 0 auto;
+	text-align: center;
+}
+
+footer p{
+    font-size: 20px;
+}
+
+#btn-sair {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#btn-sair:hover {
+    background-color: #cc0000;
+}
+
+/* Estilização da foto de perfil na barra lateral */
+#perfil-foto {
+    width: 100px; /* Define um tamanho fixo razoável */
+    height: 100px;
+    border-radius: 50%; /* Torna a foto circular */
+    object-fit: cover; /* Garante que a imagem se ajuste ao espaço sem distorção */
+    margin-bottom: 10px; /* Espaço entre a foto e o nickname */
+}
+
+/* Estilização do canto superior direito (já fornecido, mas confirmado aqui) */
+#perfil-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#perfil-foto-canto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#perfil-foto-canto:hover {
+    opacity: 0.8;
+}
+
+/* Opcional: Ajuste a barra lateral para centralizar o conteúdo */
+.perfil {
+    text-align: center; /* Centraliza a foto e o texto */
+    padding: 20px; /* Adiciona um pouco de espaçamento interno */
+}
+
+/* Estilização da logo na barra lateral */
+#logo-empresa {
+    width: 100px; /* Ajuste conforme o tamanho desejado */
+    height: 100px;
+    border-radius: 50%; /* Opcional: torna circular */
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+#nome-empresa {
+    font-size: 1.5em; /* Tamanho do texto "Sabor do Brasil" */
+    margin: 10px 0;
+}
+
+/* Estilização do canto superior direito */
+#perfil-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#perfil-foto-canto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#perfil-foto-canto:hover {
+    opacity: 0.8;
+}
+
+/* Centraliza o conteúdo da barra lateral */
+.perfil {
+    text-align: center;
+    padding: 20px;
+}

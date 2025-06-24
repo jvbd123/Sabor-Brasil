@@ -9,232 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalDislikes = document.getElementById("total-dislikes");
     const perfilContainer = document.getElementById("perfil-container");
     const perfilFotoCanto = document.getElementById("perfil-foto-canto");
-    let usuarioLogado = localStorage.getItem('usuarioLogado');
-    let usuarioLogadoId = localStorage.getItem('usuarioLogadoId');
-
-    function atualizarInterfaceLogin() {
-        if (usuarioLogado && btnLogin) {
-            btnLogin.textContent = `Olá, ${usuarioLogado}`;
-            fetch(`/api/perfil/${usuarioLogado}`)
-                .then(response => {
-                    if (!response.ok) throw new Error("Erro ao buscar perfil: " + response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success && data.foto) {
-                        if (perfilFotoCanto) perfilFotoCanto.src = data.foto;
-                    } else {
-                        if (perfilFotoCanto) perfilFotoCanto.src = "images/perfil-padrao.png";
-                    }
-                })
-                .catch(error => {
-                    console.error("Erro ao carregar foto do perfil:", error);
-                    if (perfilFotoCanto) perfilFotoCanto.src = "images/perfil-padrao.png";
-                });
-
-            if (btnIrCadastro) btnIrCadastro.style.display = "none";
-            let btnSair = document.getElementById("btn-sair");
-            if (!btnSair) {
-                btnSair = document.createElement("button");
-                btnSair.id = "btn-sair";
-                btnSair.textContent = "Sair";
-                btnSair.classList.add("btn-login");
-                btnIrCadastro.parentNode.insertBefore(btnSair, btnIrCadastro.nextSibling);
-                
-                btnSair.addEventListener("click", () => {
-                    localStorage.removeItem('usuarioLogado');
-                    localStorage.removeItem('usuarioLogadoId');
-                    usuarioLogado = null;
-                    usuarioLogadoId = null;
-                    btnLogin.textContent = "Login";
-                    totalLikes.textContent = "0";
-                    totalDislikes.textContent = "0";
-                    btnSair.remove();
-                    if (btnIrCadastro) btnIrCadastro.style.display = "block";
-                    if (perfilContainer) perfilContainer.style.display = "none";
-                    carregarInteracoes();
-                });
-            }
-
-            if (perfilContainer) {
-                perfilContainer.style.display = "block";
-                perfilFotoCanto.addEventListener("click", () => {
-                    window.location.href = "altera_perfil.html";
-                });
-            }
-        } else {
-            if (btnIrCadastro) btnIrCadastro.style.display = "block";
-            const btnSair = document.getElementById("btn-sair");
-            if (btnSair) btnSair.remove();
-            if (perfilContainer) perfilContainer.style.display = "none";
-        }
-    }
-
-    atualizarInterfaceLogin();
-
-    if (btnIrCadastro) {
-        btnIrCadastro.addEventListener("click", () => {
-            window.location.href = "cadastro.html";
-        });
-    }
-
-    if (btnLogin) {
-        btnLogin.addEventListener("click", function () {
-            if (modalLogin && !usuarioLogado) modalLogin.style.display = "block";
-        });
-    }
-
-    if (btnCancelar) {
-        btnCancelar.addEventListener("click", function () {
-            if (modalLogin) modalLogin.style.display = "none";
-        });
-    }
-
-    if (btnEntrar) {
-        btnEntrar.addEventListener("click", function () {
-            const nickname = document.getElementById("nickname").value;
-            const senha = document.getElementById("senha").value;
-
-            fetch('http://localhost:3000/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nickname, senha })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem('usuarioLogado', nickname);
-                    localStorage.setItem('usuarioLogadoId', data.usuarioId);
-                    usuarioLogado = nickname;
-                    usuarioLogadoId = data.usuarioId;
-                    if (modalLogin) modalLogin.style.display = "none";
-                    atualizarInterfaceLogin();
-                    carregarInteracoes();
-                } else if (mensagemErro) {
-                    mensagemErro.textContent = data.message;
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao fazer o login:', error);
-                if (mensagemErro) mensagemErro.textContent = "Ocorreu um erro. Tente novamente.";
-            });
-        });
-    }
-
-    const formCadastro = document.getElementById("form-cadastro");
-    if (formCadastro) {
-        console.log("Formulário de cadastro encontrado!");
-        formCadastro.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            const nome = document.getElementById("nome-cadastro").value;
-            const email = document.getElementById("email-cadastro").value;
-            const nickname = document.getElementById("nickname-cadastro").value;
-            const senha = document.getElementById("senha-cadastro").value;
-
-            console.log("Dados enviados para cadastro:", { nome, email, nickname, senha });
-
-            fetch('http://localhost:3000/cadastro', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, email, nickname, senha })
-            })
-            .then(response => {
-                console.log("Resposta do servidor (status):", response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log("Resposta do servidor (dados):", data);
-                if (data.success) {
-                    localStorage.setItem('usuarioLogado', nickname);
-                    localStorage.setItem('usuarioLogadoId', data.usuarioId);
-                    usuarioLogado = nickname;
-                    usuarioLogadoId = data.usuarioId;
-                    const mensagemErro = document.getElementById("mensagem-erro");
-                    if (mensagemErro) mensagemErro.textContent = "";
-                    alert("Cadastro realizado com sucesso!");
-                    window.location.href = "index.html";
-                } else {
-                    const mensagemErro = document.getElementById("mensagem-erro");
-                    if (mensagemErro) mensagemErro.textContent = data.message;
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao fazer o cadastro:', error);
-                const mensagemErro = document.getElementById("mensagem-erro");
-                if (mensagemErro) mensagemErro.textContent = "Ocorreu um erro. Tente novamente.";
-            });
-        });
-    }
-
-    const btnAlterarPerfil = document.getElementById("btn-alterar-perfil");
-    if (btnAlterarPerfil) {
-        btnAlterarPerfil.addEventListener("click", function() {
-            window.location.href = "altera_perfil.html";
-        });
-    }
-
-    const formAlterarPerfil = document.getElementById("form-alterar-perfil");
-    if (formAlterarPerfil) {
-        const mensagemSucesso = document.getElementById("mensagem-sucesso");
-        const mensagemErroAlterar = document.getElementById("mensagem-erro");
-
-        formAlterarPerfil.addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            if (!usuarioLogado) {
-                alert("Você precisa estar logado para alterar o perfil!");
-                window.location.href = "index.html";
-                return;
-            }
-
-            const novaFoto = document.getElementById("nova-foto").files[0];
-            const novoNickname = document.getElementById("novo-nickname").value.trim();
-
-            if (!novaFoto && !novoNickname) {
-                mensagemErroAlterar.textContent = "Preencha pelo menos um campo para alterar!";
-                mensagemErroAlterar.style.display = "block";
-                mensagemSucesso.style.display = "none";
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append("nicknameAtual", usuarioLogado);
-            if (novoNickname) formData.append("novoNickname", novoNickname);
-            if (novaFoto) formData.append("novaFoto", novaFoto);
-
-            console.log("Enviando dados para /api/alterar_perfil:", { nicknameAtual, novoNickname, temFoto: !!novaFoto });
-
-            fetch("http://localhost:3000/api/alterar_perfil", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => {
-                console.log("Status da pesquisa:", response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log("Resposta do servidor:", data);
-                if (data.message === "Perfil alterado com sucesso!") {
-                    mensagemSucesso.style.display = "block";
-                    mensagemErroAlterar.style.display = "none";
-                    if (novoNickname) {
-                        localStorage.setItem("usuarioLogado", novoNickname);
-                        usuarioLogado = novoNickname;
-                    }
-                    setTimeout(() => window.location.href = "index.html", 1500);
-                } else {
-                    throw new Error(data.message || "Erro desconhecido");
-                }
-            })
-            .catch(error => {
-                console.error("Erro ao alterar perfil:", error);
-                mensagemSucesso.style.display = "none";
-                mensagemErroAlterar.textContent = error.message || "Ocorreu um erro. Tente novamente.";
-                mensagemErroAlterar.style.display = "block";
-            });
-        });
-    }
+    let usuarioLogado = localStorage.getItem("usuarioLogado");
+    let usuarioLogadoId = localStorage.getItem("usuarioLogadoId");
 
     // Função para criar botões de apagar e editar
     function criarBotoesComentario(comentarioElement, comentarioId, textoElement, usuarioIdComentario, numComentarios) {
@@ -325,6 +101,64 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             numComentarios.textContent = 0;
             comentarioLista.innerHTML = '';
+        }
+    }
+
+    function atualizarInterfaceLogin() {
+        if (usuarioLogado && btnLogin) {
+            btnLogin.textContent = `Olá, ${usuarioLogado}`;
+            fetch(`/api/perfil/${usuarioLogado}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao buscar perfil: " + response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.foto) {
+                        if (perfilFotoCanto) perfilFotoCanto.src = data.foto;
+                    } else {
+                        if (perfilFotoCanto) perfilFotoCanto.src = "images/perfil-padrao.png";
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar foto do perfil:", error);
+                    if (perfilFotoCanto) perfilFotoCanto.src = "images/perfil-padrao.png";
+                });
+
+            if (btnIrCadastro) btnIrCadastro.style.display = "none";
+            let btnSair = document.getElementById("btn-sair");
+            if (!btnSair) {
+                btnSair = document.createElement("button");
+                btnSair.id = "btn-sair";
+                btnSair.textContent = "Sair";
+                btnSair.classList.add("btn-login");
+                btnIrCadastro.parentNode.insertBefore(btnSair, btnIrCadastro.nextSibling);
+                
+                btnSair.addEventListener("click", () => {
+                    localStorage.removeItem('usuarioLogado');
+                    localStorage.removeItem('usuarioLogadoId');
+                    usuarioLogado = null;
+                    usuarioLogadoId = null;
+                    btnLogin.textContent = "Login";
+                    totalLikes.textContent = "0";
+                    totalDislikes.textContent = "0";
+                    btnSair.remove();
+                    if (btnIrCadastro) btnIrCadastro.style.display = "block";
+                    if (perfilContainer) perfilContainer.style.display = "none";
+                    carregarInteracoes();
+                });
+            }
+
+            if (perfilContainer) {
+                perfilContainer.style.display = "block";
+                perfilFotoCanto.addEventListener("click", () => {
+                    window.location.href = "altera_perfil.html";
+                });
+            }
+        } else {
+            if (btnIrCadastro) btnIrCadastro.style.display = "block";
+            const btnSair = document.getElementById("btn-sair");
+            if (btnSair) btnSair.remove();
+            if (perfilContainer) perfilContainer.style.display = "none";
         }
     }
 
@@ -531,5 +365,170 @@ document.addEventListener("DOMContentLoaded", function () {
         totalDislikes.textContent = usuarioCurtidas.deslikes;
     }
 
+    const formCadastro = document.getElementById("form-cadastro");
+    if (formCadastro) {
+        console.log("Formulário de cadastro encontrado!");
+        formCadastro.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const nome = document.getElementById("nome-cadastro").value;
+            const email = document.getElementById("email-cadastro").value;
+            const nickname = document.getElementById("nickname-cadastro").value;
+            const senha = document.getElementById("senha-cadastro").value;
+
+            console.log("Dados enviados para cadastro:", { nome, email, nickname, senha });
+
+            fetch('http://localhost:3000/cadastro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, email, nickname, senha })
+            })
+            .then(response => {
+                console.log("Resposta do servidor (status):", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("Resposta do servidor (dados):", data);
+                if (data.success) {
+                    localStorage.setItem('usuarioLogado', nickname);
+                    localStorage.setItem('usuarioLogadoId', data.usuarioId);
+                    usuarioLogado = nickname;
+                    usuarioLogadoId = data.usuarioId;
+                    const mensagemErro = document.getElementById("mensagem-erro");
+                    if (mensagemErro) mensagemErro.textContent = "";
+                    alert("Cadastro realizado com sucesso!");
+                    window.location.href = "index.html";
+                } else {
+                    const mensagemErro = document.getElementById("mensagem-erro");
+                    if (mensagemErro) mensagemErro.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao fazer o cadastro:', error);
+                const mensagemErro = document.getElementById("mensagem-erro");
+                if (mensagemErro) mensagemErro.textContent = "Ocorreu um erro. Tente novamente.";
+            });
+        });
+    }
+
+    const formAlterarPerfil = document.getElementById("form-alterar-perfil");
+    if (formAlterarPerfil) {
+        const mensagemSucesso = document.getElementById("mensagem-sucesso");
+        const mensagemErroAlterar = document.getElementById("mensagem-erro");
+
+        formAlterarPerfil.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (!usuarioLogado) {
+                alert("Você precisa estar logado para alterar o perfil!");
+                window.location.href = "index.html";
+                return;
+            }
+
+            const novaFoto = document.getElementById("nova-foto").files[0];
+            const novoNickname = document.getElementById("novo-nickname").value.trim();
+
+            if (!novaFoto && !novoNickname) {
+                mensagemErroAlterar.textContent = "Preencha pelo menos um campo para alterar!";
+                mensagemErroAlterar.style.display = "block";
+                mensagemSucesso.style.display = "none";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("nicknameAtual", usuarioLogado);
+            if (novoNickname) formData.append("novoNickname", novoNickname);
+            if (novaFoto) formData.append("novaFoto", novaFoto);
+
+            console.log("Enviando dados para /api/alterar_perfil:", { nicknameAtual, novoNickname, temFoto: !!novaFoto });
+
+            fetch("http://localhost:3000/api/alterar_perfil", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                console.log("Status da pesquisa:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("Resposta do servidor:", data);
+                if (data.message === "Perfil alterado com sucesso!") {
+                    mensagemSucesso.style.display = "block";
+                    mensagemErroAlterar.style.display = "none";
+                    if (novoNickname) {
+                        localStorage.setItem("usuarioLogado", novoNickname);
+                        usuarioLogado = novoNickname;
+                    }
+                    setTimeout(() => window.location.href = "index.html", 1500);
+                } else {
+                    throw new Error(data.message || "Erro desconhecido");
+                }
+            })
+            .catch(error => {
+                console.error("Erro ao alterar perfil:", error);
+                mensagemSucesso.style.display = "none";
+                mensagemErroAlterar.textContent = error.message || "Ocorreu um erro. Tente novamente.";
+                mensagemErroAlterar.style.display = "block";
+            });
+        });
+    }
+
+    if (btnEntrar) {
+        btnEntrar.addEventListener("click", function () {
+            const nickname = document.getElementById("nickname").value;
+            const senha = document.getElementById("senha").value;
+
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nickname, senha })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('usuarioLogado', nickname);
+                    localStorage.setItem('usuarioLogadoId', data.usuarioId);
+                    usuarioLogado = nickname;
+                    usuarioLogadoId = data.usuarioId;
+                    if (modalLogin) modalLogin.style.display = "none";
+                    atualizarInterfaceLogin();
+                    carregarInteracoes();
+                } else if (mensagemErro) {
+                    mensagemErro.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao fazer o login:', error);
+                if (mensagemErro) mensagemErro.textContent = "Ocorreu um erro. Tente novamente.";
+            });
+        });
+    }
+
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", function () {
+            if (modalLogin) modalLogin.style.display = "none";
+        });
+    }
+
+    if (btnLogin) {
+        btnLogin.addEventListener("click", function () {
+            if (modalLogin && !usuarioLogado) modalLogin.style.display = "block";
+        });
+    }
+
+    if (btnIrCadastro) {
+        btnIrCadastro.addEventListener("click", () => {
+            window.location.href = "cadastro.html";
+        });
+    }
+
+    const btnAlterarPerfil = document.getElementById("btn-alterar-perfil");
+    if (btnAlterarPerfil) {
+        btnAlterarPerfil.addEventListener("click", function() {
+            window.location.href = "altera_perfil.html";
+        });
+    }
+
+    atualizarInterfaceLogin();
     carregarInteracoes();
 });

@@ -1,3 +1,4 @@
+/* Estilos para o body */
 body {
     margin: 0;
     font-family: sans-serif;
@@ -6,8 +7,10 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    padding-bottom: 60px;
 }
 
+/* Estilos para o container-cadastro e seus filhos */
 .container-cadastro {
     background-color: white;
     padding: 40px;
@@ -32,6 +35,7 @@ body {
     box-sizing: border-box;
 }
 
+/* Estilos para botões */
 .btn-cadastrar {
     background-color: #D97014;
     color: white;
@@ -45,42 +49,6 @@ body {
 
 .btn-cadastrar:hover {
     background-color: #c16312;
-}
-
-.link-login {
-    display: block;
-    margin-top: 15px;
-    color: #D97014;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.link-login:hover {
-    text-decoration: underline;
-}
-
-#volt{
-    color: #c16312;
-    font-size: 10px;
-}
-footer {
-    position: fixed;
-    bottom: 0; 
-    width: 100%;  
-    display: flex;
-    justify-content: space-around;
-    background-color: #D97014;
-    padding: 10px 0;
-    color: white; 
-}
-
-.social {
-    display: flex;
-    gap: 30px;
-}
-
-body {
-    padding-bottom: 60px; 
 }
 
 .btn-apagar {
@@ -97,6 +65,42 @@ body {
     background-color: #cc0000;
 }
 
+/* Estilos para links */
+.link-login {
+    display: block;
+    margin-top: 15px;
+    color: #D97014;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link-login:hover {
+    text-decoration: underline;
+}
+
+#volt {
+    color: #c16312;
+    font-size: 10px;
+}
+
+/* Estilos para o footer */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #D97014;
+    padding: 10px 0;
+    color: white;
+}
+
+.social {
+    display: flex;
+    gap: 30px;
+}
+
+/* Estilos para comentários */
 .comentario-item {
     display: flex;
     align-items: center;
